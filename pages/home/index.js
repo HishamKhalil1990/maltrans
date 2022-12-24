@@ -60,12 +60,16 @@ export default function Home(props){
             customCenter:"جمرك عمان",
             clearanceNo:"",
             clearanceDate:"",
+            operationNo:"",
             healthPath:"Red",
             customPath:"Red",
             agriPath:"Red",
+            energyPath:"Red",
             Ins215:"0",
             Ins250:"0",
             Ins251:"0",
+            Ins265:"0",
+            Ins270:"0",
             clearanceFinish:"",
             requiredAction:"تسليم المستندات",
             DocDone:"غير منجز",
@@ -83,12 +87,16 @@ export default function Home(props){
                 customCenter:"جمرك عمان",
                 clearanceNo:"",
                 clearanceDate:"",
+                operationNo:"",   
                 healthPath:"Red",
                 customPath:"Red",
                 agriPath:"Red",
+                energyPath:"Red",
                 Ins215:"0",
                 Ins250:"0",
                 Ins251:"0",
+                Ins265:"0",
+                Ins270:"0",
                 clearanceFinish:"",
                 requiredAction:"تسليم المستندات",
                 DocDone:"غير منجز",
@@ -98,8 +106,8 @@ export default function Home(props){
         }
 
         const getData = async() => {
-            console.log('clicked')
-            console.log(billNo,prevBillNo)
+            // console.log('clicked')
+            // console.log(billNo,prevBillNo)
             if(showMsg){
                 setMsg("")
                 setShowMsg(false)
