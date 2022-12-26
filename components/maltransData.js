@@ -266,7 +266,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 console.log(dataToBase64)
                 try{
                     fetch(
-                        'https://alrayhan-rate.herokuapp.com/maltrans/save-maltrans-data',
+                        'http://maltrans.abuodehbros.com:3030/save-maltrans-data',
                         {
                             method: 'POST',
                             headers: {
@@ -543,6 +543,12 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                         </label>
                                     </fieldset>
                                 }
+                                <fieldset className={styles.fieldset}>
+                                    <input className={styles.textInput} value={operationNo} name='operationNo' onChange={e => setOperationNo(e.target.value)} required/>
+                                    <label className={styles.label2}  htmlFor='operationNo'>
+                                        رقم العملية
+                                    </label>
+                                </fieldset>
                                 {updatedData.clearanceDate == ""?
                                     <fieldset className={styles.fieldset}>
                                         <input value={clearanceDate} name='clearanceDate' type="date" className={styles.opt} onChange={e => setClearanceDate(e.target.value)} required/>
