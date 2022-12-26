@@ -251,7 +251,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 formData.append('healthPath', healthPath);
                 formData.append('customPath', customPath);
                 formData.append('agriPath', agriPath);
-                formData.append('energyPath', agriPath);
+                formData.append('energyPath', energyPath);
                 formData.append('ins215', ins215);
                 formData.append('ins250', ins250);
                 formData.append('ins251', ins251);
@@ -266,7 +266,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 console.log(dataToBase64)
                 try{
                     fetch(
-                        'http://maltrans.abuodehbros.com:3030/save-maltrans-data',
+                        'http://localhost:3030/save-maltrans-data',
                         {
                             method: 'POST',
                             headers: {
