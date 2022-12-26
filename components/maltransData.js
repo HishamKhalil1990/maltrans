@@ -9,12 +9,16 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
     const [customCenter, setCustomCenter] = useState(updatedData.customCenter);
     const [clearanceNo, setClearanceNo] = useState(updatedData.clearanceNo);
     const [clearanceDate, setClearanceDate] = useState(updatedData.clearanceDate);
+    const [operationNo, setOperationNo] = useState(updatedData.operationNo);
     const [healthPath, setHealthPath] = useState(updatedData.healthPath);
     const [customPath, setCustomPath] = useState(updatedData.customPath);
     const [agriPath, setAgriPath] = useState(updatedData.agriPath);
+    const [energyPath, setEnergyPath] = useState(updatedData.energyPath);
     const [ins215, setIns215] = useState(updatedData.Ins215);
     const [ins250, setIns250] = useState(updatedData.Ins250);
     const [ins251, setIns251] = useState(updatedData.Ins251);
+    const [ins265, setIns265] = useState(updatedData.Ins265);
+    const [ins270, setIns270] = useState(updatedData.Ins270);
     const [clearanceFinish, setClearanceFinish] = useState(updatedData.clearanceFinish);
     const [requiredAction, setRequiredAction] = useState(updatedData.requiredAction);
     const [docDone, setDocDone] = useState(updatedData.DocDone);
@@ -61,12 +65,16 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                     <td key={index.toString() + "-" + '2'} className={styles.td}>{item.customCenter}</td>
                     <td key={index.toString() + "-" + '3'} className={styles.td}>{item.clearanceNo}</td>
                     <td key={index.toString() + "-" + '4'} className={styles.td}>{item.clearanceDate.split("T")[0]}</td>
+                    <td key={index.toString() + "-" + '3'} className={styles.td}>{item.operationNo}</td>
                     <td key={index.toString() + "-" + '5'} className={styles.td}>{item.healthPath}</td>
                     <td key={index.toString() + "-" + '6'} className={styles.td}>{item.customPath}</td>
                     <td key={index.toString() + "-" + '7'} className={styles.td}>{item.agriPath}</td>
+                    <td key={index.toString() + "-" + '21'} className={styles.td}>{item.energyPath}</td>
                     <td key={index.toString() + "-" + '19'} className={styles.td}>{item.Ins215}</td>
                     <td key={index.toString() + "-" + '8'} className={styles.td}>{item.Ins250}</td>
                     <td key={index.toString() + "-" + '20'} className={styles.td}>{item.Ins251}</td>
+                    <td key={index.toString() + "-" + '22'} className={styles.td}>{item.Ins265}</td>
+                    <td key={index.toString() + "-" + '23'} className={styles.td}>{item.Ins270}</td>
                     <td key={index.toString() + "-" + '10'} className={styles.td}>{item.requiredAction}</td>
                     <td key={index.toString() + "-" + '17'} className={styles.td}>{item.DocDone}</td>
                     {(history[0].requiredAction == "إنجاز") || (history[0].DocDone == "منجز")?
@@ -239,12 +247,16 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 formData.append('customCenter', customCenter);
                 formData.append('clearanceNo', clearanceNo);
                 formData.append('clearanceDate', clearanceDate);
+                formData.append('operationNo', operationNo);
                 formData.append('healthPath', healthPath);
                 formData.append('customPath', customPath);
                 formData.append('agriPath', agriPath);
+                formData.append('energyPath', energyPath);
                 formData.append('ins215', ins215);
                 formData.append('ins250', ins250);
                 formData.append('ins251', ins251);
+                formData.append('ins265', ins265);
+                formData.append('ins270', ins270);
                 formData.append('clearanceFinish', clearanceFinish);
                 formData.append('requiredAction', requiredAction);
                 formData.append('UserName', user);
@@ -254,7 +266,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 console.log(dataToBase64)
                 try{
                     fetch(
-                        'https://alrayhan-rate.herokuapp.com/maltrans/save-maltrans-data',
+                        'http://localhost:3030/save-maltrans-data',
                         {
                             method: 'POST',
                             headers: {
@@ -435,6 +447,21 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                             <div className={styles.forms}>
                                 <fieldset className={styles.fieldset}>
                                     <select value={requiredAction} name="requiredAction" className={styles.opt} onChange={e => setRequiredAction(e.target.value)}>
+                                        <option value="إرسال صورة ملونة عن المستندات">
+                                            إرسال صورة ملونة عن المستندات
+                                        </option>
+                                        <option value="فتح عملية للتخليص المسبق">
+                                            فتح عملية للتخليص المسبق
+                                        </option>
+                                        <option value="تنظيم البيان">
+                                            تنظيم البيان
+                                        </option>
+                                        <option value="تخمين البيان">
+                                            تخمين البيان
+                                        </option>
+                                        <option value="موافقة على البيان مع عدم الدفع">
+                                            موافقة على البيان مع عدم الدفع
+                                        </option>
                                         <option value="استلام المستندات">
                                             استلام المستندات
                                         </option>
@@ -443,12 +470,6 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                         </option>
                                         <option value="تفعيل إذن التسليم">
                                             تفعيل إذن التسليم
-                                        </option>
-                                        <option value="تنظيم البيان">
-                                            تنظيم البيان
-                                        </option>
-                                        <option value="تخمين البيان">
-                                            تخمين البيان
                                         </option>
                                         <option value="دفع البيان">
                                             دفع البيان
@@ -522,6 +543,12 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                         </label>
                                     </fieldset>
                                 }
+                                <fieldset className={styles.fieldset}>
+                                    <input className={styles.textInput} value={operationNo} name='operationNo' onChange={e => setOperationNo(e.target.value)} required/>
+                                    <label className={styles.label2}  htmlFor='operationNo'>
+                                        رقم العملية
+                                    </label>
+                                </fieldset>
                                 {updatedData.clearanceDate == ""?
                                     <fieldset className={styles.fieldset}>
                                         <input value={clearanceDate} name='clearanceDate' type="date" className={styles.opt} onChange={e => setClearanceDate(e.target.value)} required/>
@@ -614,6 +641,25 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                             المسرب الزراعي
                                         </label>
                                     </fieldset>
+                                    <fieldset className={styles.fieldset}>
+                                        <select value={energyPath} name="EnergyPath" className={styles.opt} onChange={e => setEnergyPath(e.target.value)}>
+                                            <option value="Red">
+                                                Red
+                                            </option>
+                                            <option value="Yellow">
+                                                Yellow 
+                                            </option>
+                                            <option value="Green">
+                                                Green 
+                                            </option>
+                                            <option value="Green">
+                                                Blue
+                                            </option>
+                                        </select>
+                                        <label className={styles.label2} htmlFor='EnergyPath'>
+                                            مسرب الطاقة
+                                        </label>
+                                    </fieldset>
                                 </div>
                             </div>
                             <div className={styles.customs}>
@@ -636,6 +682,18 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                     <input className={styles.textInput} value={ins251} name='ins251' onChange={e => setIns251(e.target.value)} required/>
                                     <label className={styles.label3} htmlFor='ins251'>
                                         251: ضريبة مبيعات عامة نسبية بأمانة 
+                                    </label>
+                                </fieldset>
+                                <fieldset className={styles.fieldset}>
+                                    <input className={styles.textInput} value={ins265} name='ins265' onChange={e => setIns265(e.target.value)} required/>
+                                    <label className={styles.label3} htmlFor='ins265'>
+                                        265: تأمين بدل خدمات على المستودات المعفاة %1
+                                    </label>
+                                </fieldset>
+                                <fieldset className={styles.fieldset}>
+                                    <input className={styles.textInput} value={ins270} name='ins270' onChange={e => setIns270(e.target.value)} required/>
+                                    <label className={styles.label3} htmlFor='ins270'>
+                                        270: تأمين بدل خدمات على بضائع خاضعة للرسوم %5
                                     </label>
                                 </fieldset>
                             </div>
@@ -745,12 +803,16 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                             <th key={2} className={styles.th}>المركز الجمركي</th>
                                             <th key={3} className={styles.th}>رقم البيان الجمركي</th>
                                             <th key={4} className={styles.th}>تاريخ البيان الجمركي</th>
+                                            <th key={24} className={styles.th}>رقم العملية</th>
                                             <th key={5} className={styles.th}>المسرب الصحي</th>
                                             <th key={6} className={styles.th}>المسرب الجمركي</th>
-                                            <th key={7} className={styles.th}>المسرب الصحي</th>
+                                            <th key={7} className={styles.th}>المسرب الزراعي</th>
+                                            <th key={21} className={styles.th}>مسرب الطاقة</th>
                                             <th key={19} className={styles.th}>بدل وثائق غير مصدقة مستوفاة بالتأمين : 215</th>
                                             <th key={8} className={styles.th}>250: رسم موحد بأمانة</th>
                                             <th key={20} className={styles.th}>251: ضريبة مبيعات عامة نسبية بأمانة</th>
+                                            <th key={22} className={styles.th}>265: تأمين بدل خدمات على المستودات المعفاة %1</th>
+                                            <th key={23} className={styles.th}>270: تأمين بدل خدمات على بضائع خاضعة للرسوم %5</th>
                                             <th key={10} className={styles.th}>الإجراء المطلوب</th>
                                             <th key={17} className={styles.th}>حالة البيان</th>
                                             {(history[0].requiredAction == "إنجاز") || (history[0].DocDone == "منجز")?
