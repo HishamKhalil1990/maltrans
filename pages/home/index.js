@@ -15,6 +15,9 @@ export default function Home(props){
     const [loading, setLoading] = useState(true)
     const [username, setUsername] = useState("")
     const [token, setToken] = useState("")
+    const [customCenter, setCustomCenter] = useState("")
+    const [companyType, setCompanyType] = useState("")
+    const [companyName, setCompanyName] = useState("")
  
     useEffect(() => {
         const checkLogin = async() => {
@@ -30,6 +33,9 @@ export default function Home(props){
                 }else{
                     setUsername(tokens.username)
                     setToken(tokens.token)
+                    setCustomCenter(tokens.customCenter)
+                    setCompanyType(tokens.companyType)
+                    setCompanyName(tokens.companyName)
                     setLoading(false)
                 }
             }else{
@@ -57,7 +63,7 @@ export default function Home(props){
         const [billNo, setBillNo] = useState("")
         const [billData, setBillData] = useState({})
         const [updatedData, setUpdatedData] = useState({
-            customCenter:"جمرك عمان",
+            customCenter:customCenter == 'عمان'? "جمرك عمان" : 'جمرك العقبة',
             clearanceNo:"",
             clearanceDate:"",
             operationNo:"",
@@ -79,12 +85,16 @@ export default function Home(props){
         const [msg,setMsg] = useState("")
         const [showMsg,setShowMsg] = useState(false)
         const [innerLoading,setInnerLoading] = useState(false)
+        const [actions, setActions] = useState([])
+        const [centers, setCenters] = useState([])
+        const [changedCenter, setChangedCenter] = useState(false)
+        const [isTransportor, setIsTransportor] = useState(true)
 
         const clear = () => {
             prevBillNo = ""
             setBillData({})
             setUpdatedData({
-                customCenter:"جمرك عمان",
+                customCenter:customCenter == 'عمان'? "جمرك عمان" : 'جمرك العقبة',
                 clearanceNo:"",
                 clearanceDate:"",
                 operationNo:"",   
@@ -126,6 +136,9 @@ export default function Home(props){
                     },
                     data: JSON.stringify({
                         billNo:billNo,
+                        customCenter:customCenter,
+                        companyType:companyType,
+                        companyName:companyName
                     })
                 }).then((res) => {
                     setTimeout(() => {
@@ -133,6 +146,9 @@ export default function Home(props){
                         if(res.data.status == "success"){
                             res.data.data.mainData.U_ContainerNo = res.data.data.mainData.U_ContainerNo.split('/')
                             setBillData(res.data.data.mainData)
+                            setActions(res.data.data.actions)
+                            setCenters(res.data.data.centers)
+                            setIsTransportor(res.data.data.isTransportor)
                             if(res.data.data.isUpdated == "1"){
                                 res.data.data.updatedData.clearanceDate = res.data.data.updatedData.clearanceDate.split("T")[0]
                                 if(res.data.data.updatedData.requiredAction == "إنجاز"){
@@ -141,6 +157,11 @@ export default function Home(props){
                                     res.data.data.updatedData.clearanceFinish = res.data.data.updatedData.clearanceFinish.split("T")[0]
                                 }else{
                                     res.data.data.updatedData.clearanceFinish = ""
+                                }
+                                const centers = res.data.data.centers
+                                if(centers.length > 0 && !centers.includes(res.data.data.updatedData.customCenter)){
+                                    res.data.data.updatedData.customCenter = centers[0]
+                                    setChangedCenter(true)
                                 }
                                 setUpdatedData(res.data.data.updatedData)
                             }
@@ -239,7 +260,7 @@ export default function Home(props){
                             <>
                                 {Object.keys(billData).length > 0?
                                     <div style={{width:'100%'}}>
-                                        <MaltransData data={billData} tokenKey={token} logout={logout} username={username} updatedData={updatedData} histData={histData}/>
+                                        <MaltransData data={billData} tokenKey={token} logout={logout} username={username} updatedData={updatedData} histData={histData} changedCenter={changedCenter} companyType={companyType} allActions={actions} allCenters={centers} isTransportor={isTransportor}/>
                                     </div>
                                 :
                                     <></>

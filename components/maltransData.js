@@ -4,7 +4,7 @@ import ConfirmModal from './confirmModal';
 import SendingLoader from './sendingLoader';
 import ContainerInfo from './containerInfo';
 
-export default function MaltransData({data,tokenKey,logout,username,updatedData,histData}){
+export default function MaltransData({data,tokenKey,logout,username,updatedData,histData,changedCenter,companyType,allActions,allCenters,isTransportor}){
 
     const [customCenter, setCustomCenter] = useState(updatedData.customCenter);
     const [clearanceNo, setClearanceNo] = useState(updatedData.clearanceNo);
@@ -31,6 +31,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
     const [loading, setLoading] = useState(false)
     const [isSending, setIsSending] = useState(false)
     const [containerNO, setContainerNO] = useState(data.U_ContainerNo[0])
+    const [company, setCompany] = useState(companyType)
 
     const containerRef = useRef()
 
@@ -49,6 +50,7 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
 
     const historyLog = () => {
         return history
+        .filter(rec => rec.UserName == user)
         .sort((a,b) => {
             return parseInt(b.ID) - parseInt(a.ID)
         })
@@ -100,6 +102,28 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                 <option key={item}>
                     {item}
                 </option>
+            )
+        })
+    }
+
+    const getCenters = () => {
+        return allCenters.map((center,index) => {
+            return(
+                <option key={index} value={center}>
+                    {center}
+                </option>
+                                                   
+            )
+        })
+    }
+
+    const getActions = () => {
+        return allActions.map((action,index) => {
+            return(
+                <option key={index} value={action}>
+                    {action}
+                </option>
+                                                   
             )
         })
     }
@@ -318,118 +342,148 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
         };
     
         return(
-            <div>
-                <h4 style={{paddingRight:'10px',textAlign:"right"}}>
-                    الملفات
-                </h4>
-                <div style={{display:"flex",flexWrap:"wrap",justifyContent:"flex-start",alignItems:"flex-start",flexDirection:"row-reverse"}}>
-                    <div style={{marginLeft:"15px"}}>
-                        <div className={styles.fileUpload}>
-                            <div className={styles.inputContainer}>
-                                {isSelectedOne?
-                                    <div className={styles.userActions}>
-                                        <button onClick={() => removeFile(1)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
-                                        </button>
+            <> 
+                {company != 'ناقل'?
+                    <div>
+                        <h4 style={{paddingRight:'10px',textAlign:"right"}}>
+                            الملفات
+                        </h4>
+                        <div style={{display:"flex",flexWrap:"wrap",justifyContent:"flex-start",alignItems:"flex-start",flexDirection:"row-reverse"}}>
+                            <div style={{marginLeft:"15px"}}>
+                                <div className={styles.fileUpload}>
+                                    <div className={styles.inputContainer}>
+                                        {isSelectedOne?
+                                            <div className={styles.userActions}>
+                                                <button onClick={() => removeFile(1)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
+                                                </button>
+                                            </div>
+                                        :
+                                            <></>
+                                        }
+                                        <fieldset className={styles.fieldset}>
+                                                <input className={styles.input} type="file" ref={ref1}  name="file1" accept=".pdf" onChange={e => changeHandler(e,1)} />
+                                                <label className={styles.fileLabel}  htmlFor='file1'>
+                                                    البيان الجمركي
+                                                </label>
+                                        </fieldset>
                                     </div>
-                                :
-                                    <></>
-                                }
-                                <fieldset className={styles.fieldset}>
-                                        <input className={styles.input} type="file" ref={ref1}  name="file1" accept=".pdf" onChange={e => changeHandler(e,1)} />
-                                        <label className={styles.fileLabel}  htmlFor='file1'>
-                                            البيان الجمركي
+                                    <div className={styles.inputContainer}>
+                                        {isSelectedTwo?
+                                            <div className={styles.userActions}>
+                                                <button onClick={() => removeFile(2)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
+                                                </button>
+                                            </div>
+                                        :
+                                            <></>
+                                        }
+                                        <fieldset className={styles.fieldset}>
+                                                <input className={styles.input} type="file" ref={ref2} name="file2" accept=".pdf" onChange={e => changeHandler(e,2)} />
+                                                <label className={styles.fileLabel}  htmlFor='file2'>
+                                                    فواتير التخليص
+                                                </label>
+                                        </fieldset>  
+                                    </div>
+                                    <div className={styles.inputContainer}>
+                                        {isSelectedThree?
+                                            <div className={styles.userActions}>
+                                                <button onClick={() => removeFile(3)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
+                                                </button>
+                                            </div>
+                                        :
+                                            <></>
+                                        }
+                                        <fieldset className={styles.fieldset}>
+                                                <input className={styles.input} type="file" ref={ref3} name="file3" accept=".pdf" onChange={e => changeHandler(e,3)} />
+                                                <label className={styles.fileLabel}  htmlFor='file3'>
+                                                    نموذج سحب العينات
+                                                </label>
+                                        </fieldset>  
+                                    </div>
+                                    <div className={styles.inputContainer}>
+                                        {isSelectedFour?
+                                            <div className={styles.userActions}>
+                                                <button onClick={() => removeFile(4)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
+                                                </button>
+                                            </div>
+                                        :
+                                            <></>
+                                        }
+                                        <fieldset className={styles.fieldset}>
+                                                <input className={styles.input} type="file" ref={ref4} name="file4" accept=".pdf" onChange={e => changeHandler(e,4)} />
+                                                <label className={styles.fileLabel}  htmlFor='file4'>
+                                                    نتائج البيانات والانجازات
+                                                </label>
+                                        </fieldset>  
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.fileUpload} >
+                                <fieldset className={styles.fieldset2}>
+                                        <label className={styles.label2} htmlFor='notes' style={{marginBottom:"10px"}}>
+                                            ملاحظات
                                         </label>
+                                        <textarea className={styles.textArea} value={notes} name='notes' onChange={e => {setNotes(e.target.value)}}/>
                                 </fieldset>
                             </div>
-                            <div className={styles.inputContainer}>
-                                {isSelectedTwo?
-                                    <div className={styles.userActions}>
-                                        <button onClick={() => removeFile(2)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
-                                        </button>
+                        </div>
+                        <div className={styles.btuContainer}>
+                            <div>
+                                {/* <button className={styles.btu} type='submit' onClick={handleSubmission}>Submit</button> */}
+                                {isSending?
+                                    <div>
+                                        <SendingLoader/>
                                     </div>
                                 :
-                                    <></>
-                                }
-                                <fieldset className={styles.fieldset}>
-                                        <input className={styles.input} type="file" ref={ref2} name="file2" accept=".pdf" onChange={e => changeHandler(e,2)} />
-                                        <label className={styles.fileLabel}  htmlFor='file2'>
-                                            فواتير التخليص
-                                        </label>
-                                </fieldset>  
-                            </div>
-                            <div className={styles.inputContainer}>
-                                {isSelectedThree?
-                                    <div className={styles.userActions}>
-                                        <button onClick={() => removeFile(3)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
-                                        </button>
+                                    <div style={{display:'flex',justifyConten:'center',alignItems:'center'}}>
+                                        {isMsg?
+                                            <div>
+                                                {success?
+                                                    <div style={{color:"green"}}>{msg}</div>
+                                                :
+                                                    <div style={{color:"red"}}>{msg}</div>
+                                                }
+                                            </div>
+                                        :
+                                            <></>
+                                        }
+                                        <ConfirmModal handleSubmission={handleSubmission}/>
                                     </div>
-                                :
-                                    <></>
                                 }
-                                <fieldset className={styles.fieldset}>
-                                        <input className={styles.input} type="file" ref={ref3} name="file3" accept=".pdf" onChange={e => changeHandler(e,3)} />
-                                        <label className={styles.fileLabel}  htmlFor='file3'>
-                                            نموذج سحب العينات
-                                        </label>
-                                </fieldset>  
-                            </div>
-                            <div className={styles.inputContainer}>
-                                {isSelectedFour?
-                                    <div className={styles.userActions}>
-                                        <button onClick={() => removeFile(4)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 448 512"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/></svg>
-                                        </button>
-                                    </div>
-                                :
-                                    <></>
-                                }
-                                <fieldset className={styles.fieldset}>
-                                        <input className={styles.input} type="file" ref={ref4} name="file4" accept=".pdf" onChange={e => changeHandler(e,4)} />
-                                        <label className={styles.fileLabel}  htmlFor='file4'>
-                                            نتائج البيانات والانجازات
-                                        </label>
-                                </fieldset>  
                             </div>
                         </div>
                     </div>
-                    <div className={styles.fileUpload} >
-                        <fieldset className={styles.fieldset2}>
-                                <label className={styles.label2} htmlFor='notes' style={{marginBottom:"10px"}}>
-                                    ملاحظات
-                                </label>
-                                <textarea className={styles.textArea} value={notes} name='notes' onChange={e => {setNotes(e.target.value)}}/>
-                        </fieldset>
+                :
+                    <div className={styles.btuContainer}>
+                        <div>
+                            {/* <button className={styles.btu} type='submit' onClick={handleSubmission}>Submit</button> */}
+                            {isSending?
+                                <div>
+                                    <SendingLoader/>
+                                </div>
+                            :
+                                <div style={{display:'flex',justifyConten:'center',alignItems:'center'}}>
+                                    {isMsg?
+                                        <div>
+                                            {success?
+                                                <div style={{color:"green"}}>{msg}</div>
+                                            :
+                                                <div style={{color:"red"}}>{msg}</div>
+                                            }
+                                        </div>
+                                    :
+                                        <></>
+                                    }
+                                    <ConfirmModal handleSubmission={handleSubmission}/>
+                                </div>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className={styles.btuContainer}>
-                    <div>
-                        {/* <button className={styles.btu} type='submit' onClick={handleSubmission}>Submit</button> */}
-                        {isSending?
-                            <div>
-                                <SendingLoader/>
-                            </div>
-                        :
-                            <div style={{display:'flex',justifyConten:'center',alignItems:'center'}}>
-                                {isMsg?
-                                    <div>
-                                        {success?
-                                            <div style={{color:"green"}}>{msg}</div>
-                                        :
-                                            <div style={{color:"red"}}>{msg}</div>
-                                        }
-                                    </div>
-                                :
-                                    <></>
-                                }
-                                <ConfirmModal handleSubmission={handleSubmission}/>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+                }
+            </>
         )
     }
 
@@ -447,88 +501,36 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                             <div className={styles.forms}>
                                 <fieldset className={styles.fieldset}>
                                     <select value={requiredAction} name="requiredAction" className={styles.opt} onChange={e => setRequiredAction(e.target.value)}>
-                                        <option value="إرسال صورة ملونة عن المستندات">
-                                            إرسال صورة ملونة عن المستندات
-                                        </option>
-                                        <option value="فتح عملية للتخليص المسبق">
-                                            فتح عملية للتخليص المسبق
-                                        </option>
-                                        <option value="تنظيم البيان">
-                                            تنظيم البيان
-                                        </option>
-                                        <option value="تخمين البيان">
-                                            تخمين البيان
-                                        </option>
-                                        <option value="موافقة على البيان مع عدم الدفع">
-                                            موافقة على البيان مع عدم الدفع
-                                        </option>
-                                        <option value="استلام المستندات">
-                                            استلام المستندات
-                                        </option>
-                                        <option value="استلام إذن التسليم">
-                                            استلام إذن التسليم
-                                        </option>
-                                        <option value="تفعيل إذن التسليم">
-                                            تفعيل إذن التسليم
-                                        </option>
-                                        <option value="دفع البيان">
-                                            دفع البيان
-                                        </option>
-                                        <option value="تحميل من الميناء">
-                                            تحميل من الميناء
-                                        </option>
-                                        <option value="معاينة مع عينة">
-                                            معاينة مع عينة
-                                        </option>
-                                        <option value="معاينة بدون عينة">
-                                            معاينة بدون عينة
-                                        </option>
-                                        <option value="تصريح خروج">
-                                            تصريح خروج
-                                        </option>
-                                        {/* <option value="وصلت">
-                                            وصلت
-                                        </option> */}
-                                        <option value="نتائج">
-                                            نتائج
-                                        </option>
-                                        <option value="إنجاز">
-                                            إنجاز
-                                        </option>
+                                        {getActions()}
                                     </select>
                                     <label className={styles.label2} htmlFor='requiredAction'>
                                         الإجراء المطلوب
                                     </label>
                                 </fieldset>
-                                {updatedData.clearanceNo == ""?
-                                    <fieldset className={styles.fieldset}>
-                                        <select value={customCenter} name="customCenter" className={styles.opt} onChange={e => setCustomCenter(e.target.value)}>
-                                            <option value="جمرك عمان">
-                                                جمرك عمان
-                                            </option>
-                                            <option value="جمرك جابر">
-                                                جمرك جابر
-                                            </option>
-                                            <option value="جمرك العمري">
-                                                جمرك العمري
-                                            </option>
-                                            <option value="جمرك العقبة">
-                                                جمرك العقبة
-                                            </option>
-                                        </select>
-                                        <label className={styles.label2} htmlFor='customCenter'>
-                                            المركز الجمركي
-                                        </label>
-                                    </fieldset>
+                                {company != 'ناقل'?
+                                    <>
+                                        {updatedData.clearanceNo == "" || changedCenter?
+                                            <fieldset className={styles.fieldset}>
+                                                <select value={customCenter} name="customCenter" className={styles.opt} onChange={e => setCustomCenter(e.target.value)}>
+                                                    {getCenters()}
+                                                </select>
+                                                <label className={styles.label2} htmlFor='customCenter'>
+                                                    المركز الجمركي
+                                                </label>
+                                            </fieldset>
+                                        :
+                                            <fieldset className={styles.fieldset}>
+                                                <input className={styles.textInput} value={customCenter} name="customCenter" readOnly/>
+                                                <label className={styles.label2} htmlFor='customCenter'>
+                                                    المركز الجمركي
+                                                </label>
+                                            </fieldset>
+                                        }
+                                    </>
                                 :
-                                    <fieldset className={styles.fieldset}>
-                                        <input className={styles.textInput} value={customCenter} name="customCenter" readOnly/>
-                                        <label className={styles.label2} htmlFor='customCenter'>
-                                            المركز الجمركي
-                                        </label>
-                                    </fieldset>
+                                    <></>
                                 }
-                                {updatedData.clearanceNo == ""?
+                                {updatedData.clearanceNo == "" && company != 'ناقل'?
                                     <fieldset className={styles.fieldset}>
                                         <input className={styles.textInput} value={clearanceNo} name='clearanceNo' onChange={e => setClearanceNo(e.target.value)} required/>
                                         <label className={styles.label2}  htmlFor='clearanceNo'>
@@ -537,166 +539,213 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                                     </fieldset>
                                 :
                                     <fieldset className={styles.fieldset}>
-                                        <input className={styles.textInput} value={clearanceNo} name='clearanceNo' readOnly/>
+                                        <input className={styles.textInput} value={clearanceNo} name='clearanceNo' required/>
                                         <label className={styles.label2}  htmlFor='clearanceNo'>
                                             رقم البيان الجمركي
                                         </label>
                                     </fieldset>
                                 }
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={operationNo} name='operationNo' onChange={e => setOperationNo(e.target.value)} required/>
-                                    <label className={styles.label2}  htmlFor='operationNo'>
-                                        رقم العملية
-                                    </label>
-                                </fieldset>
-                                {updatedData.clearanceDate == ""?
-                                    <fieldset className={styles.fieldset}>
-                                        <input value={clearanceDate} name='clearanceDate' type="date" className={styles.opt} onChange={e => setClearanceDate(e.target.value)} required/>
-                                        <label className={styles.label2} htmlFor='clearanceDate'>
-                                            تاريخ البيان الجمركي
-                                        </label>
-                                    </fieldset>
-                                :
-                                    <fieldset className={styles.fieldset}>
-                                        <input className={styles.textInput} value={clearanceDate} name='clearanceDate' readOnly/>
-                                        <label className={styles.label2} htmlFor='clearanceDate'>
-                                            تاريخ البيان الجمركي
-                                        </label>
-                                    </fieldset>
-                                }
-                                <fieldset className={styles.fieldset}>
-                                <select value={docDone} name="docDone" className={styles.opt} onChange={e => setDocDone(e.target.value)}>
-                                        <option value="غير منجز">
-                                            غير منجز
-                                        </option>
-                                        <option value="منجز">
-                                            منجز
-                                        </option>
-                                    </select>
-                                    <label className={styles.label2} htmlFor='docDone'>
-                                        حالة البيان
-                                    </label>
-                                </fieldset>
-                                {(requiredAction == "إنجاز") || (docDone == "منجز")?
-                                    <fieldset className={styles.fieldset}>
-                                        <input value={clearanceFinish} name='clearanceFinish' type="date" className={styles.opt} onChange={e => setClearanceFinish(e.target.value)} required/>
-                                        <label className={styles.label2} htmlFor='clearanceFinish'>
-                                            إنجاز البيان
-                                        </label>
-                                    </fieldset>
+                                {company != 'ناقل'?
+                                    <>
+                                        <fieldset className={styles.fieldset}>
+                                            <input className={styles.textInput} value={operationNo} name='operationNo' onChange={e => setOperationNo(e.target.value)} required/>
+                                            <label className={styles.label2}  htmlFor='operationNo'>
+                                                رقم العملية
+                                            </label>
+                                        </fieldset>
+                                        {updatedData.clearanceDate == ""?
+                                            <fieldset className={styles.fieldset}>
+                                                <input value={clearanceDate} name='clearanceDate' type="date" className={styles.opt} onChange={e => setClearanceDate(e.target.value)} required/>
+                                                <label className={styles.label2} htmlFor='clearanceDate'>
+                                                    تاريخ البيان الجمركي
+                                                </label>
+                                            </fieldset>
+                                        :
+                                            <fieldset className={styles.fieldset}>
+                                                <input className={styles.textInput} value={clearanceDate} name='clearanceDate' readOnly/>
+                                                <label className={styles.label2} htmlFor='clearanceDate'>
+                                                    تاريخ البيان الجمركي
+                                                </label>
+                                            </fieldset>
+                                        }
+                                        <fieldset className={styles.fieldset}>
+                                        <select value={docDone} name="docDone" className={styles.opt} onChange={e => setDocDone(e.target.value)}>
+                                                <option value="غير منجز">
+                                                    غير منجز
+                                                </option>
+                                                <option value="منجز">
+                                                    منجز
+                                                </option>
+                                            </select>
+                                            <label className={styles.label2} htmlFor='docDone'>
+                                                حالة البيان
+                                            </label>
+                                        </fieldset>
+                                        {(requiredAction == "إنجاز") || (docDone == "منجز")?
+                                            <fieldset className={styles.fieldset}>
+                                                <input value={clearanceFinish} name='clearanceFinish' type="date" className={styles.opt} onChange={e => setClearanceFinish(e.target.value)} required/>
+                                                <label className={styles.label2} htmlFor='clearanceFinish'>
+                                                    إنجاز البيان
+                                                </label>
+                                            </fieldset>
+                                        :
+                                            <></>
+                                        }
+                                    </>
                                 :
                                     <></>
                                 }
                             </div>
-                            <div className={styles.paths}>
-                                <h4 style={{paddingRight:'10px'}}>
-                                    المسارب
-                                </h4>
-                                <div className={styles.paths2}>
+                            {company != 'ناقل'?
+                                <div className={styles.paths}>
+                                    <h4 style={{paddingRight:'10px'}}>
+                                        المسارب
+                                    </h4>
+                                    <div className={styles.paths2}>
+                                        <fieldset className={styles.fieldset}>
+                                            <select value={healthPath} name="healthPath" className={styles.opt} onChange={e => setHealthPath(e.target.value)}>
+                                                <option value="Red">
+                                                    Red
+                                                </option>
+                                                <option value="Yellow">
+                                                    Yellow 
+                                                </option>
+                                                <option value="Green">
+                                                    Green 
+                                                </option>
+                                            </select>
+                                            <label className={styles.label2} htmlFor='healthPath'>
+                                                المسرب الصحي
+                                            </label>
+                                        </fieldset>
+                                        <fieldset className={styles.fieldset}>
+                                            <select value={customPath} name="customPath" className={styles.opt} onChange={e => setCustomPath(e.target.value)}>
+                                                <option value="Red">
+                                                    Red
+                                                </option>
+                                                <option value="Yellow">
+                                                    Yellow 
+                                                </option>
+                                                <option value="Green">
+                                                    Green 
+                                                </option>
+                                            </select>
+                                            <label className={styles.label2} htmlFor='customPath'>
+                                                المسرب الجمركي
+                                            </label>
+                                        </fieldset>
+                                        <fieldset className={styles.fieldset}>
+                                        <select value={agriPath} name="agriPath" className={styles.opt} onChange={e => setAgriPath(e.target.value)}>
+                                                <option value="Red">
+                                                    Red
+                                                </option>
+                                                <option value="Yellow">
+                                                    Yellow 
+                                                </option>
+                                                <option value="Green">
+                                                    Green 
+                                                </option>
+                                            </select>
+                                            <label className={styles.label2} htmlFor='agriPath'>
+                                                المسرب الزراعي
+                                            </label>
+                                        </fieldset>
+                                        <fieldset className={styles.fieldset}>
+                                            <select value={energyPath} name="EnergyPath" className={styles.opt} onChange={e => setEnergyPath(e.target.value)}>
+                                                <option value="Red">
+                                                    Red
+                                                </option>
+                                                <option value="Yellow">
+                                                    Yellow 
+                                                </option>
+                                                <option value="Green">
+                                                    Green 
+                                                </option>
+                                                <option value="Green">
+                                                    Blue
+                                                </option>
+                                            </select>
+                                            <label className={styles.label2} htmlFor='EnergyPath'>
+                                                مسرب الطاقة
+                                            </label>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            :
+                                <div className={styles.paths}>
+                                    <h4 style={{paddingRight:'10px'}}>
+                                        المسارب
+                                    </h4>
+                                    <div className={styles.paths2}>
+                                        <fieldset className={styles.fieldset}>
+                                            <input className={styles.textInput} value={healthPath} name="healthPath" readOnly/>
+                                            <label className={styles.label2} htmlFor='healthPath'>
+                                                المسرب الصحي
+                                            </label>
+                                        </fieldset>
+
+                                        <fieldset className={styles.fieldset}>
+                                            <input className={styles.textInput}  value={customPath} name="customPath"  readOnly/>
+                                            <label className={styles.label2} htmlFor='customPath'>
+                                                المسرب الجمركي
+                                            </label>
+                                        </fieldset>
+
+                                        <fieldset className={styles.fieldset}>
+                                            <input className={styles.textInput} value={energyPath} name="EnergyPath" readOnly/>
+                                            <label className={styles.label2} htmlFor='agriPath'>
+                                                المسرب الزراعي
+                                            </label>
+                                        </fieldset>
+
+                                        <fieldset className={styles.fieldset}>
+                                            <input className={styles.textInput} value={energyPath} name="EnergyPath" readOnly/>
+                                            <label className={styles.label2} htmlFor='EnergyPath'>
+                                                مسرب الطاقة
+                                            </label>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            }
+                            {company != 'ناقل'?
+                                <div className={styles.customs}>
+                                    <h4 style={{paddingRight:'10px'}}>
+                                        بنود التأمينات الجمركية
+                                    </h4>
                                     <fieldset className={styles.fieldset}>
-                                        <select value={healthPath} name="healthPath" className={styles.opt} onChange={e => setHealthPath(e.target.value)}>
-                                            <option value="Red">
-                                                Red
-                                            </option>
-                                            <option value="Yellow">
-                                                Yellow 
-                                            </option>
-                                            <option value="Green">
-                                                Green 
-                                            </option>
-                                        </select>
-                                        <label className={styles.label2} htmlFor='healthPath'>
-                                            المسرب الصحي
+                                        <input className={styles.textInput} value={ins215} name='ins215' onChange={e => setIns215(e.target.value)} required/>
+                                        <label className={styles.label3} htmlFor='ins215'>
+                                            بدل وثائق غير مصدقة مستوفاة بالتأمين : 215
                                         </label>
                                     </fieldset>
                                     <fieldset className={styles.fieldset}>
-                                        <select value={customPath} name="customPath" className={styles.opt} onChange={e => setCustomPath(e.target.value)}>
-                                            <option value="Red">
-                                                Red
-                                            </option>
-                                            <option value="Yellow">
-                                                Yellow 
-                                            </option>
-                                            <option value="Green">
-                                                Green 
-                                            </option>
-                                        </select>
-                                        <label className={styles.label2} htmlFor='customPath'>
-                                            المسرب الجمركي
+                                        <input className={styles.textInput} value={ins250} name='ins250' onChange={e => setIns250(e.target.value)} required/>
+                                        <label className={styles.label3} htmlFor='ins250'>
+                                            250: رسم موحد بأمانة  
                                         </label>
                                     </fieldset>
                                     <fieldset className={styles.fieldset}>
-                                    <select value={agriPath} name="agriPath" className={styles.opt} onChange={e => setAgriPath(e.target.value)}>
-                                            <option value="Red">
-                                                Red
-                                            </option>
-                                            <option value="Yellow">
-                                                Yellow 
-                                            </option>
-                                            <option value="Green">
-                                                Green 
-                                            </option>
-                                        </select>
-                                        <label className={styles.label2} htmlFor='agriPath'>
-                                            المسرب الزراعي
+                                        <input className={styles.textInput} value={ins251} name='ins251' onChange={e => setIns251(e.target.value)} required/>
+                                        <label className={styles.label3} htmlFor='ins251'>
+                                            251: ضريبة مبيعات عامة نسبية بأمانة 
                                         </label>
                                     </fieldset>
                                     <fieldset className={styles.fieldset}>
-                                        <select value={energyPath} name="EnergyPath" className={styles.opt} onChange={e => setEnergyPath(e.target.value)}>
-                                            <option value="Red">
-                                                Red
-                                            </option>
-                                            <option value="Yellow">
-                                                Yellow 
-                                            </option>
-                                            <option value="Green">
-                                                Green 
-                                            </option>
-                                            <option value="Green">
-                                                Blue
-                                            </option>
-                                        </select>
-                                        <label className={styles.label2} htmlFor='EnergyPath'>
-                                            مسرب الطاقة
+                                        <input className={styles.textInput} value={ins265} name='ins265' onChange={e => setIns265(e.target.value)} required/>
+                                        <label className={styles.label3} htmlFor='ins265'>
+                                            265: تأمين بدل خدمات على المستودات المعفاة %1
+                                        </label>
+                                    </fieldset>
+                                    <fieldset className={styles.fieldset}>
+                                        <input className={styles.textInput} value={ins270} name='ins270' onChange={e => setIns270(e.target.value)} required/>
+                                        <label className={styles.label3} htmlFor='ins270'>
+                                            270: تأمين بدل خدمات على بضائع خاضعة للرسوم %5
                                         </label>
                                     </fieldset>
                                 </div>
-                            </div>
-                            <div className={styles.customs}>
-                                <h4 style={{paddingRight:'10px'}}>
-                                    بنود التأمينات الجمركية
-                                </h4>
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={ins215} name='ins215' onChange={e => setIns215(e.target.value)} required/>
-                                    <label className={styles.label3} htmlFor='ins215'>
-                                        بدل وثائق غير مصدقة مستوفاة بالتأمين : 215
-                                    </label>
-                                </fieldset>
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={ins250} name='ins250' onChange={e => setIns250(e.target.value)} required/>
-                                    <label className={styles.label3} htmlFor='ins250'>
-                                        250: رسم موحد بأمانة  
-                                    </label>
-                                </fieldset>
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={ins251} name='ins251' onChange={e => setIns251(e.target.value)} required/>
-                                    <label className={styles.label3} htmlFor='ins251'>
-                                        251: ضريبة مبيعات عامة نسبية بأمانة 
-                                    </label>
-                                </fieldset>
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={ins265} name='ins265' onChange={e => setIns265(e.target.value)} required/>
-                                    <label className={styles.label3} htmlFor='ins265'>
-                                        265: تأمين بدل خدمات على المستودات المعفاة %1
-                                    </label>
-                                </fieldset>
-                                <fieldset className={styles.fieldset}>
-                                    <input className={styles.textInput} value={ins270} name='ins270' onChange={e => setIns270(e.target.value)} required/>
-                                    <label className={styles.label3} htmlFor='ins270'>
-                                        270: تأمين بدل خدمات على بضائع خاضعة للرسوم %5
-                                    </label>
-                                </fieldset>
-                            </div>
+                            :
+                                <></>
+                            }
                             <FileUpload/>
                         </form>
                     </div>
@@ -737,17 +786,28 @@ export default function MaltransData({data,tokenKey,logout,username,updatedData,
                             عدد الحاويات
                         </label>
                     </fieldset>
-                    <fieldset className={styles.fieldset}>
-                        <div className={styles.containerNoDiv}>
-                            <ContainerInfo containerNo={containerNO} tokenKey={token} username={user} bl={data.BL} logout={logout} getContainerNo={getContainerNo}/>
-                            <select ref={containerRef} name='U_ContainerNo'  className={styles.opt2} value={containerNO} onChange={e => {setContainerNO(e.target.value)}}>
-                                {containeNo(data.U_ContainerNo)}
+                    {isTransportor?
+                        <fieldset className={styles.fieldset}>
+                            <div className={styles.containerNoDiv}>
+                                <ContainerInfo containerNo={containerNO} tokenKey={token} username={user} bl={data.BL} logout={logout} getContainerNo={getContainerNo}/>
+                                <select ref={containerRef} name='U_ContainerNo'  className={styles.opt2} value={containerNO} onChange={e => {setContainerNO(e.target.value)}}>
+                                    {containeNo(data.U_ContainerNo)}
+                                </select>
+                            </div>
+                            <label className={styles.label} htmlFor='U_ContainerNo'>
+                                أرقام الحاويات
+                            </label>
+                        </fieldset>
+                    :
+                        <fieldset className={styles.fieldset}>
+                            <select ref={containerRef} name='U_ContainerNo'  className={styles.opt} value={containerNO} onChange={e => {setContainerNO(e.target.value)}}>
+                                    {containeNo(data.U_ContainerNo)}
                             </select>
-                        </div>
-                        <label className={styles.label} htmlFor='U_ContainerNo'>
-                            أرقام الحاويات
-                        </label>
-                    </fieldset>
+                            <label className={styles.label} htmlFor='U_ContainerNo'>
+                                أرقام الحاويات
+                            </label>
+                        </fieldset>
+                    }
                     <fieldset className={styles.fieldset}>
                         <input className={styles.textInput} name='U_ETS' readOnly value={data.U_ETS.substring(10,-1)}/>
                         <label className={styles.label} htmlFor='U_ETS'>
